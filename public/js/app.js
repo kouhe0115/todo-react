@@ -61645,7 +61645,10 @@ function RenderRows(props) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
       key: todo.id
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, todo.id), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, todo.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "btn btn-secondary"
+      className: "btn btn-secondary",
+      onClick: function onClick() {
+        return props.deleteTodo(todo);
+      }
     }, "\u5B8C\u4E86")));
   });
 }
@@ -61668,6 +61671,7 @@ function (_Component) {
     };
     _this.inputChange = _this.inputChange.bind(_assertThisInitialized(_this));
     _this.addTodo = _this.addTodo.bind(_assertThisInitialized(_this));
+    _this.deleteTodo = _this.deleteTodo.bind(_assertThisInitialized(_this));
     return _this;
   } //コンポーネントがマウントされた時点で初期描画用のtodosをAPIから取得
 
@@ -61724,6 +61728,22 @@ function (_Component) {
       })["catch"](function (error) {
         console.log(error);
       });
+    } //完了ボタンがクリックされたら
+
+  }, {
+    key: "deleteTodo",
+    value: function deleteTodo(todo) {
+      var _this4 = this;
+
+      axios.post("/api/del", {
+        id: todo.id
+      }).then(function (res) {
+        _this4.setState({
+          todos: res.data
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
     } //テーブルの骨組みを描画し、行の描画はRenderRowsに任せる（その際、todosを渡す）
 
   }, {
@@ -61745,7 +61765,8 @@ function (_Component) {
       }, "\u767B\u9332"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table mt-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ID"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "\u30BF\u30B9\u30AF"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "\u5B8C\u4E86"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RenderRows, {
-        todos: this.state.todos
+        todos: this.state.todos,
+        deleteTodo: this.deleteTodo
       }))));
     }
   }]);
