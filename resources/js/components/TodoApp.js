@@ -22,8 +22,11 @@ export default class TodoApp extends Component {
     constructor() {
         super();
         this.state = {
-            todos: []
+            todos: [],
+            todo: ""
         };
+        this.inputChange = this.inputChange.bind(this);
+        this.addTodo = this.addTodo.bind(this);
     }
 
     //コンポーネントがマウントされた時点で初期描画用のtodosをAPIから取得
@@ -41,10 +44,63 @@ export default class TodoApp extends Component {
             });
     }
 
+    //入力がされたら（都度）
+    inputChange(event) {
+        switch (event.target.name) {
+            case "todo":
+                this.setState({
+                    todo: event.target.value
+                });
+                break;
+            default:
+                break;
+        }
+    }
+
+    //登録ボタンがクリックされたら
+    addTodo() {
+        //空だと弾く
+        if (this.state.todo == "") {
+            return;
+        }
+
+        //入力値を投げる
+        axios
+            .post("/api/add", {
+                title: this.state.todo
+            })
+            .then(res => {
+                //戻り値をtodosにセット
+                this.setState({
+                    todos: res.data,
+                    todo: ""
+                });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
     //テーブルの骨組みを描画し、行の描画はRenderRowsに任せる（その際、todosを渡す）
     render() {
         return (
             <React.Fragment>
+                {/* add from */}
+                <div className="form-group mt-4">
+                    <label htmlFor="todo">新規Todo</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="todo"
+                        value={this.state.todo}
+                        onChange={this.inputChange}
+                    />
+                </div>
+                <button className="btn btn-primary" onClick={this.addTodo}>
+                    登録
+                </button>
+
+                {/* table */}
                 <table className="table mt-5">
                     <thead>
                         <tr>

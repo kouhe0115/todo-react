@@ -61628,9 +61628,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -61663,8 +61663,11 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(TodoApp).call(this));
     _this.state = {
-      todos: []
+      todos: [],
+      todo: ""
     };
+    _this.inputChange = _this.inputChange.bind(_assertThisInitialized(_this));
+    _this.addTodo = _this.addTodo.bind(_assertThisInitialized(_this));
     return _this;
   } //コンポーネントがマウントされた時点で初期描画用のtodosをAPIから取得
 
@@ -61682,12 +61685,64 @@ function (_Component) {
       })["catch"](function (error) {
         console.log(error);
       });
+    } //入力がされたら（都度）
+
+  }, {
+    key: "inputChange",
+    value: function inputChange(event) {
+      switch (event.target.name) {
+        case "todo":
+          this.setState({
+            todo: event.target.value
+          });
+          break;
+
+        default:
+          break;
+      }
+    } //登録ボタンがクリックされたら
+
+  }, {
+    key: "addTodo",
+    value: function addTodo() {
+      var _this3 = this;
+
+      //空だと弾く
+      if (this.state.todo == "") {
+        return;
+      } //入力値を投げる
+
+
+      axios.post("/api/add", {
+        title: this.state.todo
+      }).then(function (res) {
+        //戻り値をtodosにセット
+        _this3.setState({
+          todos: res.data,
+          todo: ""
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
     } //テーブルの骨組みを描画し、行の描画はRenderRowsに任せる（その際、todosを渡す）
 
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group mt-4"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "todo"
+      }, "\u65B0\u898FTodo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "form-control",
+        name: "todo",
+        value: this.state.todo,
+        onChange: this.inputChange
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary",
+        onClick: this.addTodo
+      }, "\u767B\u9332"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table mt-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ID"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "\u30BF\u30B9\u30AF"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "\u5B8C\u4E86"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RenderRows, {
         todos: this.state.todos

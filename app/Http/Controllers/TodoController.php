@@ -14,14 +14,14 @@ class TodoController extends Controller
         return $todos;
     }
 
-    // addTodo
+    //add todo
     public function addTodo(Request $request)
     {
-      $todo = new Todo;
-      $todo ->title = $request->title;
-      $todo->save();
+        $todo = new Todo;
+        $todo->title = $request->title;
+        $todo->save();
 
-      $todos = Todo::all();
-      return $todos;
+        $todos = Todo::all();
+        return $todos;
     }
 }
