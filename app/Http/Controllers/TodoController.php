@@ -24,4 +24,14 @@ class TodoController extends Controller
         $todos = Todo::all();
         return $todos;
     }
+
+    //delete
+    public function deleteTodo(Request $request)
+    {
+        $todo = Todo::find($request->id);
+        $todo->delete();
+
+        $todos = Todo::all();
+        return $todos;
+    }
 }

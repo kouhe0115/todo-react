@@ -10,7 +10,12 @@ function RenderRows(props) {
                 <td>{todo.id}</td>
                 <td>{todo.title}</td>
                 <td>
-                    <button className="btn btn-secondary">完了</button>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => props.deleteTodo(todo)}
+                    >
+                        完了
+                    </button>
                 </td>
             </tr>
         );
@@ -27,6 +32,7 @@ export default class TodoApp extends Component {
         };
         this.inputChange = this.inputChange.bind(this);
         this.addTodo = this.addTodo.bind(this);
+        this.deleteTodo = this.deleteTodo.bind(this);
     }
 
     //コンポーネントがマウントされた時点で初期描画用のtodosをAPIから取得
@@ -81,6 +87,22 @@ export default class TodoApp extends Component {
             });
     }
 
+    //完了ボタンがクリックされたら
+    deleteTodo(todo) {
+        axios
+            .post("/api/del", {
+                id: todo.id
+            })
+            .then(res => {
+                this.setState({
+                    todos: res.data
+                });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
     //テーブルの骨組みを描画し、行の描画はRenderRowsに任せる（その際、todosを渡す）
     render() {
         return (
@@ -111,7 +133,10 @@ export default class TodoApp extends Component {
                     </thead>
                     <tbody>
                         {/* 行の描画 */}
-                        <RenderRows todos={this.state.todos} />
+                        <RenderRows
+                            todos={this.state.todos}
+                            deleteTodo={this.deleteTodo}
+                        />
                     </tbody>
                 </table>
             </React.Fragment>
